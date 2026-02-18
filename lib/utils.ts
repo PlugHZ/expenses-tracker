@@ -1,5 +1,19 @@
 import { Category } from "@/types/expense";
-
+import { TimePeriod } from "@/components/expenses/FilterBar";
+export function getDateRangeFromPeriod(period: TimePeriod): Date | null {
+  if (period === "all") return null;
+  const now = new Date();
+  const map: Record<TimePeriod, number> = {
+    "7days": 7,
+    "30days": 30,
+    "90days": 90,
+    "6months": 180,
+    "1year": 365,
+    all: 0,
+  };
+  now.setDate(now.getDate() - map[period]);
+  return now;
+}
 export const CATEGORIES: Category[] = [
   "Food",
   "Transport",

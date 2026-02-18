@@ -6,6 +6,7 @@ export async function GET(req: NextRequest) {
   const from = searchParams.get("from");
   const to = searchParams.get("to");
   const category = searchParams.get("category");
+  const type = searchParams.get("type");
   const sort = searchParams.get("sort") || "date";
   const order = searchParams.get("order") || "desc";
 
@@ -17,6 +18,7 @@ export async function GET(req: NextRequest) {
   if (from) query = query.gte("date", from);
   if (to) query = query.lte("date", to);
   if (category) query = query.eq("category", category);
+  if (type) query = query.eq("type", type);
 
   const { data, error } = await query;
 

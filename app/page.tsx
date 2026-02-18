@@ -1,101 +1,150 @@
-import Image from "next/image";
+'use client'
+
+import { useState, useEffect, useCallback } from 'react'
+import { Plus } from 'lucide-react'
+import { Expense, ExpenseFormData, Category, TransactionType } from '@/types/expense'
+import { getDateRangeFromPeriod } from '@/lib/utils'
+import Button from '@/components/ui/Button'
+import Modal from '@/components/ui/Modal'
+import StatsCards from '@/components/expenses/StatsCards'
+import ExpenseTable from '@/components/expenses/ExpenseTable'
+import ExpenseForm from '@/components/expenses/ExpenseForm'
+import FilterBar, { TimePeriod } from '@/components/expenses/FilterBar'
+import { format } from 'date-fns'
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [expenses, setExpenses] = useState<Expense[]>([])
+  const [loading, setLoading] = useState(true)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editExpense, setEditExpense] = useState<Expense | null>(null)
+  const [period, setPeriod] = useState<TimePeriod>('30days')
+  const [category, setCategory] = useState<Category | 'all'>('all')
+  const [type, setType] = useState<TransactionType | 'all'>('all')
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const fetchExpenses = useCallback(async () => {
+    setLoading(true)
+    try {
+      const params = new URLSearchParams()
+      const fromDate = getDateRangeFromPeriod(period)
+      if (fromDate) params.set('from', format(fromDate, 'yyyy-MM-dd'))
+      params.set('sort', 'date')
+      params.set('order', 'desc')
+
+      const res = await fetch(`/api/expenses?${params}`)
+      const data = await res.json()
+      if (Array.isArray(data)) setExpenses(data)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }, [period])
+
+  useEffect(() => {
+    fetchExpenses()
+  }, [fetchExpenses])
+
+  const handleAdd = async (data: ExpenseFormData) => {
+    const res = await fetch('/api/expenses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    if (!res.ok) throw new Error('บันทึกไม่สำเร็จ')
+    await fetchExpenses()
+    setModalOpen(false)
+  }
+
+  const handleEdit = async (data: ExpenseFormData) => {
+    if (!editExpense) return
+    const res = await fetch(`/api/expenses/${editExpense.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    if (!res.ok) throw new Error('อัปเดตไม่สำเร็จ')
+    await fetchExpenses()
+    setModalOpen(false)
+    setEditExpense(null)
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('ยืนยันการลบรายการนี้?')) return
+    await fetch(`/api/expenses/${id}`, { method: 'DELETE' })
+    await fetchExpenses()
+  }
+
+  const openEdit = (expense: Expense) => {
+    setEditExpense(expense)
+    setModalOpen(true)
+  }
+
+  const openAdd = () => {
+    setEditExpense(null)
+    setModalOpen(true)
+  }
+
+  // กรองทั้ง type และ category ใช้ทั้ง StatsCards และ ExpenseTable
+  const filteredExpenses = expenses.filter((e) => {
+    const matchType = type === 'all' || e.type === type
+    const matchCategory =
+      category === 'all' ||
+      e.type === 'income' ||  // ← รายรับแสดงเสมอเมื่อ type เป็น 'all'
+      e.category === category
+    return matchType && matchCategory
+  })
+
+  return (
+    <main className="min-h-screen bg-zinc-950 text-zinc-100">
+      <div className="max-w-5xl mx-auto px-4 py-10 flex flex-col gap-8">
+
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-zinc-100">บันทึกรายรับรายจ่าย</h1>
+            <p className="text-sm text-zinc-500 mt-1">สรุปการเงินของคุณ</p>
+          </div>
+          <Button onClick={openAdd} variant="primary">
+            <Plus size={16} />
+            เพิ่มรายการ
+          </Button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+
+        {/* Stats */}
+        <StatsCards expenses={filteredExpenses} loading={loading} />
+
+        {/* Filter */}
+        <FilterBar
+          period={period}
+          category={category}
+          type={type}
+          onPeriodChange={setPeriod}
+          onCategoryChange={setCategory}
+          onTypeChange={setType}
+        />
+
+        {/* Table */}
+        <ExpenseTable
+          expenses={filteredExpenses}
+          loading={loading}
+          onEdit={openEdit}
+          onDelete={handleDelete}
+        />
+
+      </div>
+
+      {/* Modal */}
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => { setModalOpen(false); setEditExpense(null) }}
+        title={editExpense ? 'แก้ไขรายการ' : 'เพิ่มรายการใหม่'}
+      >
+        <ExpenseForm
+          initialData={editExpense || undefined}
+          onSubmit={editExpense ? handleEdit : handleAdd}
+          onCancel={() => { setModalOpen(false); setEditExpense(null) }}
+        />
+      </Modal>
+    </main>
+  )
 }
