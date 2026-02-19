@@ -36,8 +36,8 @@ export default function FilterBar({
                 <div className="flex bg-zinc-900 border border-zinc-800 rounded-xl p-1 gap-1">
                     {[
                         { value: 'all', label: 'ทั้งหมด' },
-                        { value: 'income', label: '💰 รายรับ' },
-                        { value: 'expense', label: '💸 รายจ่าย' },
+                        { value: 'income', label: ' รายรับ' },
+                        { value: 'expense', label: ' รายจ่าย' },
                     ].map((t) => (
                         <button
                             key={t.value}
