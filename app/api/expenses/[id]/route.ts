@@ -1,15 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { createServerClient } from "@supabase/ssr";
+
+function getSupabase(req: NextRequest) {
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    },
+  );
+}
 
 export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } },
 ) {
+  const supabase = getSupabase(req);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const body = await req.json();
   const { data, error } = await supabase
     .from("expenses")
     .update(body)
     .eq("id", params.id)
+    .eq("user_id", user.id)
     .select()
     .single();
 
@@ -19,13 +42,21 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: { id: string } },
 ) {
+  const supabase = getSupabase(req);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { error } = await supabase
     .from("expenses")
     .delete()
-    .eq("id", params.id);
+    .eq("id", params.id)
+    .eq("user_id", user.id);
 
   if (error)
     return NextResponse.json({ error: error.message }, { status: 500 });

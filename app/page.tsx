@@ -100,14 +100,15 @@ export default function Home() {
       <div className="max-w-5xl mx-auto px-4 py-10 flex flex-col gap-8">
 
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-zinc-100">บันทึกรายรับรายจ่าย</h1>
-            <p className="text-sm text-zinc-500 mt-1">สรุปการเงินของคุณ</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-zinc-100">บันทึกรายรับรายจ่าย</h1>
+            <p className="text-xs sm:text-sm text-zinc-500 mt-1">สรุปการเงินของคุณ</p>
           </div>
-          <Button onClick={openAdd} variant="primary">
+          <Button onClick={openAdd} variant="primary" className="shrink-0">
             <Plus size={16} />
-            เพิ่มรายการ
+            <span className="hidden sm:inline">เพิ่มรายการ</span>
+            <span className="sm:hidden">เพิ่ม</span>
           </Button>
         </div>
 
