@@ -16,35 +16,34 @@ export default function Navbar() {
 
     const handleSignOut = async () => {
         await signOut()
-        router.push('/auth')
-        router.refresh()
+        window.location.href = '/auth'
     }
 
     return (
         <nav className="border-b border-zinc-800 bg-zinc-950 sticky top-0 z-10">
             <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-                <span className="font-bold text-zinc-100">บันทึกรายรับรายจ่าย</span>
+                <span className="font-bold text-zinc-100 text-sm sm:text-base">💰 รายรับรายจ่าย</span>
                 <div className="flex items-center gap-1">
                     {links.map(({ href, label, icon: Icon }) => (
                         <Link
                             key={href}
                             href={href}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${pathname === href
+                            className={`flex items-center gap-1.5 px-2.5 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${pathname === href
                                     ? 'bg-amber-500/10 text-amber-400'
                                     : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800'
                                 }`}
                         >
                             <Icon size={15} />
-                            {label}
+                            <span className="hidden sm:inline">{label}</span>
                         </Link>
                     ))}
 
                     <button
                         onClick={handleSignOut}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:text-red-400 hover:bg-zinc-800 transition-all ml-2"
+                        className="flex items-center gap-1.5 px-2.5 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-zinc-400 hover:text-red-400 hover:bg-zinc-800 transition-all ml-1"
                     >
                         <LogOut size={15} />
-                        ออกจากระบบ
+                        <span className="hidden sm:inline">ออกจากระบบ</span>
                     </button>
                 </div>
             </div>

@@ -74,7 +74,7 @@ export default function DashboardPage() {
                 <MonthlyChart expenses={expenses} />
 
                 {/* Daily Chart + Category */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                     <Charts expenses={expenses} loading={loading} />
                     <CategorySummary expenses={expenses} />
                 </div>

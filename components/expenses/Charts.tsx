@@ -65,7 +65,7 @@ export default function Charts({ expenses, loading }: ChartsProps) {
                 {dailyData.length === 0 ? (
                     <div className="h-52 flex items-center justify-center text-zinc-600 text-sm">ไม่มีข้อมูล</div>
                 ) : (
-                    <ResponsiveContainer width="100%" height={200}>
+                    <ResponsiveContainer width="100%" height={180}>
                         <BarChart data={dailyData} barGap={2}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
                             <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#71717a' }} />
@@ -89,7 +89,7 @@ export default function Charts({ expenses, loading }: ChartsProps) {
                 {categoryData.length === 0 ? (
                     <div className="h-52 flex items-center justify-center text-zinc-600 text-sm">ไม่มีข้อมูล</div>
                 ) : (
-                    <ResponsiveContainer width="100%" height={200}>
+                    <ResponsiveContainer width="100%" height={180}>
                         <PieChart>
                             <Pie
                                 data={categoryData}

@@ -31,20 +31,18 @@ export default function FilterBar({
         <div className="flex flex-col gap-3">
 
             {/* Type */}
-            <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs text-zinc-500 uppercase tracking-wider font-medium w-16">ประเภท</span>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <span className="text-xs text-zinc-500 uppercase tracking-wider font-medium sm:w-16">ประเภท</span>
                 <div className="flex bg-zinc-900 border border-zinc-800 rounded-xl p-1 gap-1">
                     {[
                         { value: 'all', label: 'ทั้งหมด' },
-                        { value: 'income', label: 'รายรับ' },
-                        { value: 'expense', label: 'รายจ่าย' },
+                        { value: 'income', label: '💰 รายรับ' },
+                        { value: 'expense', label: '💸 รายจ่าย' },
                     ].map((t) => (
                         <button
                             key={t.value}
                             onClick={() => onTypeChange(t.value as TransactionType | 'all')}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${type === t.value
-                                ? 'bg-amber-500 text-white'
-                                : 'text-zinc-400 hover:text-zinc-200'
+                            className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${type === t.value ? 'bg-amber-500 text-white' : 'text-zinc-400 hover:text-zinc-200'
                                 }`}
                         >
                             {t.label}
@@ -54,16 +52,14 @@ export default function FilterBar({
             </div>
 
             {/* Period */}
-            <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs text-zinc-500 uppercase tracking-wider font-medium w-16">ช่วงเวลา</span>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <span className="text-xs text-zinc-500 uppercase tracking-wider font-medium sm:w-16">ช่วงเวลา</span>
                 <div className="flex bg-zinc-900 border border-zinc-800 rounded-xl p-1 gap-1 flex-wrap">
                     {PERIODS.map((p) => (
                         <button
                             key={p.value}
                             onClick={() => onPeriodChange(p.value)}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${period === p.value
-                                ? 'bg-amber-500 text-white'
-                                : 'text-zinc-400 hover:text-zinc-200'
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${period === p.value ? 'bg-amber-500 text-white' : 'text-zinc-400 hover:text-zinc-200'
                                 }`}
                         >
                             {p.label}
@@ -73,14 +69,12 @@ export default function FilterBar({
             </div>
 
             {/* Category */}
-            <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs text-zinc-500 uppercase tracking-wider font-medium w-16">หมวดหมู่</span>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <span className="text-xs text-zinc-500 uppercase tracking-wider font-medium sm:w-16">หมวดหมู่</span>
                 <div className="flex bg-zinc-900 border border-zinc-800 rounded-xl p-1 gap-1 flex-wrap">
                     <button
                         onClick={() => onCategoryChange('all')}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${category === 'all'
-                            ? 'bg-amber-500 text-white'
-                            : 'text-zinc-400 hover:text-zinc-200'
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${category === 'all' ? 'bg-amber-500 text-white' : 'text-zinc-400 hover:text-zinc-200'
                             }`}
                     >
                         ทั้งหมด
@@ -89,9 +83,7 @@ export default function FilterBar({
                         <button
                             key={cat}
                             onClick={() => onCategoryChange(cat)}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${category === cat
-                                ? 'bg-amber-500 text-white'
-                                : 'text-zinc-400 hover:text-zinc-200'
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${category === cat ? 'bg-amber-500 text-white' : 'text-zinc-400 hover:text-zinc-200'
                                 }`}
                         >
                             {cat}

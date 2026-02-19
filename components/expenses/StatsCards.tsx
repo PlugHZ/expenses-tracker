@@ -77,18 +77,18 @@ export default function StatsCards({ expenses, loading }: StatsCardsProps) {
     }
 
     return (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {cards.map((card) => {
                 const Icon = card.icon
                 return (
-                    <div key={card.label} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 hover:border-zinc-700 transition-colors">
-                        <div className="flex items-center justify-between mb-4">
-                            <span className="text-xs font-medium text-zinc-500 uppercase tracking-wider">{card.label}</span>
-                            <div className={`${card.bg} p-2 rounded-lg`}>
-                                <Icon size={14} className={card.color} />
+                    <div key={card.label} className="bg-zinc-900 border border-zinc-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 hover:border-zinc-700 transition-colors">
+                        <div className="flex items-center justify-between mb-3 sm:mb-4">
+                            <span className="text-xs font-medium text-zinc-500 uppercase tracking-wider leading-tight">{card.label}</span>
+                            <div className={`${card.bg} p-1.5 sm:p-2 rounded-lg shrink-0`}>
+                                <Icon size={13} className={card.color} />
                             </div>
                         </div>
-                        <p className={`text-xl font-semibold flex items-center gap-2 ${card.valueColor}`}>
+                        <p className={`text-base sm:text-xl font-semibold flex items-center gap-2 ${card.valueColor}`}>
                             {card.dotColor && (
                                 <span className="w-2 h-2 rounded-full inline-block flex-shrink-0" style={{ backgroundColor: card.dotColor }} />
                             )}
