@@ -11,6 +11,7 @@ import ExpenseTable from '@/components/expenses/ExpenseTable'
 import ExpenseForm from '@/components/expenses/ExpenseForm'
 import FilterBar, { TimePeriod } from '@/components/expenses/FilterBar'
 import { format } from 'date-fns'
+import Charts from '@/components/expenses/Charts'
 
 export default function Home() {
   const [expenses, setExpenses] = useState<Expense[]>([])
@@ -89,7 +90,7 @@ export default function Home() {
     const matchType = type === 'all' || e.type === type
     const matchCategory =
       category === 'all' ||
-      e.type === 'income' ||  // ← รายรับแสดงเสมอเมื่อ type เป็น 'all'
+      e.type === 'income' ||
       e.category === category
     return matchType && matchCategory
   })
@@ -112,6 +113,7 @@ export default function Home() {
 
         {/* Stats */}
         <StatsCards expenses={filteredExpenses} loading={loading} />
+        <Charts expenses={filteredExpenses} loading={loading} />
 
         {/* Filter */}
         <FilterBar

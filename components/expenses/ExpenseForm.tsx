@@ -57,19 +57,19 @@ export default function ExpenseForm({ initialData, onSubmit, onCancel }: Expense
             <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">ประเภท</label>
                 <div className="grid grid-cols-2 gap-2">
-                    {(['expense', 'income'] as TransactionType[]).map((t) => (
+                    {(['income', 'expense'] as TransactionType[]).map((t) => (
                         <button
                             key={t}
                             type="button"
                             onClick={() => setForm({ ...form, type: t })}
                             className={`py-2.5 rounded-lg text-sm font-medium border transition-all ${form.type === t
-                                ? t === 'expense'
-                                    ? 'border-red-500 bg-red-500/10 text-red-400'
-                                    : 'border-emerald-500 bg-emerald-500/10 text-emerald-400'
+                                ? t === 'income'
+                                    ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400'
+                                    : 'border-red-500 bg-red-500/10 text-red-400'
                                 : 'border-zinc-700 bg-zinc-800 text-zinc-400 hover:border-zinc-500'
                                 }`}
                         >
-                            {t === 'expense' ? '💸 รายจ่าย' : '💰 รายรับ'}
+                            {t === 'income' ? ' รายรับ' : ' รายจ่าย'}
                         </button>
                     ))}
                 </div>
@@ -123,8 +123,8 @@ export default function ExpenseForm({ initialData, onSubmit, onCancel }: Expense
                                 type="button"
                                 onClick={() => setForm({ ...form, category: cat })}
                                 className={`px-3 py-2 rounded-lg text-xs font-medium border transition-all ${form.category === cat
-                                        ? 'border-amber-500 bg-amber-500/10 text-amber-400'
-                                        : 'border-zinc-700 bg-zinc-800 text-zinc-400 hover:border-zinc-500'
+                                    ? 'border-amber-500 bg-amber-500/10 text-amber-400'
+                                    : 'border-zinc-700 bg-zinc-800 text-zinc-400 hover:border-zinc-500'
                                     }`}
                             >
                                 {cat}

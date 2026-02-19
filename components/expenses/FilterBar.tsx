@@ -36,15 +36,15 @@ export default function FilterBar({
                 <div className="flex bg-zinc-900 border border-zinc-800 rounded-xl p-1 gap-1">
                     {[
                         { value: 'all', label: 'ทั้งหมด' },
-                        { value: 'income', label: '💰 รายรับ' },
-                        { value: 'expense', label: '💸 รายจ่าย' },
+                        { value: 'income', label: 'รายรับ' },
+                        { value: 'expense', label: 'รายจ่าย' },
                     ].map((t) => (
                         <button
                             key={t.value}
                             onClick={() => onTypeChange(t.value as TransactionType | 'all')}
                             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${type === t.value
-                                    ? 'bg-amber-500 text-white'
-                                    : 'text-zinc-400 hover:text-zinc-200'
+                                ? 'bg-amber-500 text-white'
+                                : 'text-zinc-400 hover:text-zinc-200'
                                 }`}
                         >
                             {t.label}
@@ -62,8 +62,8 @@ export default function FilterBar({
                             key={p.value}
                             onClick={() => onPeriodChange(p.value)}
                             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${period === p.value
-                                    ? 'bg-amber-500 text-white'
-                                    : 'text-zinc-400 hover:text-zinc-200'
+                                ? 'bg-amber-500 text-white'
+                                : 'text-zinc-400 hover:text-zinc-200'
                                 }`}
                         >
                             {p.label}
@@ -79,8 +79,8 @@ export default function FilterBar({
                     <button
                         onClick={() => onCategoryChange('all')}
                         className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${category === 'all'
-                                ? 'bg-amber-500 text-white'
-                                : 'text-zinc-400 hover:text-zinc-200'
+                            ? 'bg-amber-500 text-white'
+                            : 'text-zinc-400 hover:text-zinc-200'
                             }`}
                     >
                         ทั้งหมด
@@ -90,8 +90,8 @@ export default function FilterBar({
                             key={cat}
                             onClick={() => onCategoryChange(cat)}
                             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${category === cat
-                                    ? 'bg-amber-500 text-white'
-                                    : 'text-zinc-400 hover:text-zinc-200'
+                                ? 'bg-amber-500 text-white'
+                                : 'text-zinc-400 hover:text-zinc-200'
                                 }`}
                         >
                             {cat}
